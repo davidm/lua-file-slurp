@@ -28,11 +28,11 @@ API
     options:
     't' - read/write in text mode (i.e. converting newlines from/to native OS
           formats) rather than the default binary mode.
-    'T' - reads/write in text mode but removed carriage return '\r' characters
-          on reading.  This is more portable form of 't'.
+    'T' - reads/write in binary mode but remove carriage return '\r' characters
+          on reading.  This is a more portable form of 't'.
           't' and 'T' are mutually exclusive.
-    's' - silent/supress raising errors (described below).
-    'a' - append to file rather than overwrite.  Should only be used for
+    's' - silence/supress raising errors (described below).
+    'a' - append to file rather than overwrite.  Should only be used when
           writing.
     'p' - opens a pipe.  `filename` is a command to execute.  'a'/'t' ignored.
     
@@ -45,13 +45,13 @@ API
 
     Writes contents of string data to file with path `filename` (overwriting
     or creating if necessary).  `options` and error handling are the same as
-    for `FS.read`.
+    for `FS.readfile`.
 
 DESIGN NOTES
 
   The functions by default operate in binary mode, which is safest when it's
   not known whether the user wants to write in binary or text files.  Even
-  if writing text files, it is common today to read Unix text files downloaded
+  if reading text files, it is common today to read Unix text files downloaded
   from the Internet on Windows and vice-versa, and programs should be robust
   for whatever input is provided, which requires using binary mode on text
   files.  The 'T' option will remove '\r' characters on input while reading
@@ -113,7 +113,7 @@ THE SOFTWARE.
 -- file_slurp.lua
 -- (c) 2011 David Manura.  Licensed under the same terms as Lua 5.1 (MIT license).
 
-local FS = {_TYPE = 'module', _NAME = 'file_slurp', _VERSION = 0.001000}
+local FS = {_TYPE = 'module', _NAME = 'file_slurp', _VERSION = 0.001001}
 
 local function check_options(options)
   if not options then return {} end
@@ -179,14 +179,16 @@ return FS
 package = 'file_slurp'
 version = '$(_VERSION)-1'
 source = {
-  url = 'http://github.com/downloads/davidm/TBD' -- TBD!
+  url = 'https://raw.github.com/gist/1325400/file_slurp.lua', -- IMPROVE?
+  --url = 'https://gist.github.com/gists/1325400/download',
+  --file = 'file_slurp-$(_VERSION).tar.gz'
 }
 description = {
   summary = 'Easily read/write entire files from/to a string.',
   detailed =
     'Provides simple functions to read/write entire files from/to a string.',
   license = 'MIT/X11',
-  homepage = nil, -- TBD
+  homepage = 'https://gist.github.com/1325400',
   maintainer = 'David Manura'
 }
 dependencies = {}
