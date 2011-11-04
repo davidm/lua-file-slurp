@@ -11,6 +11,8 @@ SYNOPSIS
   local s = FS.readfile 'foo.txt'
   s = s:gsub('\t', '    ')
   FS.writefile('foo.txt', s)
+  -- Also supports ascii/binary, error policies, and pipes:
+  s = FS.readfile('ls -la', 'p')
 
 DESCRIPTION
 
