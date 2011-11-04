@@ -179,9 +179,12 @@ return FS
 package = 'file_slurp'
 version = '$(_VERSION)-1'
 source = {
-  url = 'https://raw.github.com/gist/1325400/file_slurp.lua', -- IMPROVE?
+  -- IMPROVE?
+  --url = 'https://raw.github.com/gist/1325400/file_slurp.lua',
   --url = 'https://gist.github.com/gists/1325400/download',
   --file = 'file_slurp-$(_VERSION).tar.gz'
+  url = 'https://raw.github.com/gist/1325400/3a6c583847380feebba122d73f9c5121ae7ab16d/file_slurp.lua',
+  md5 = '76cf352abf4d8a924c6180d7c663c916'
 }
 description = {
   summary = 'Easily read/write entire files from/to a string.',
