@@ -13,6 +13,8 @@ SYNOPSIS
   FS.writefile('foo.txt', s)
   -- Also supports ascii/binary, error policies, and pipes:
   s = FS.readfile('ls -la', 'p')
+  -- test for file readable
+  assert(FS.testfile'foo.txt')
 
 DESCRIPTION
 
@@ -48,6 +50,14 @@ API
     or creating if necessary).  `options` and error handling are the same as
     for `FS.readfile`.
 
+  FS.testfile(filename [, options]) --> true | false, err
+
+    Tests whether `io.open(filename, options)` succeeds.  Returns `true` on
+    success, else `false` and error string (message and error code).
+    `options` defaults to 'r' (test readable).  This function does not
+    cleanup on write tests.  Warning: testing whether a file is readable
+    is not always the same as testing whether a file exists.
+    
 DESIGN NOTES
 
   The functions by default operate in binary mode, which is safest when it's
@@ -159,6 +169,13 @@ function FS.writefile(filename, data, options)
   return data
 end
 
+function FS.testfile(filename, options)
+  local fh, err, code = io.open(filename, options or 'r')
+  if fh then fh:close(); return true
+  else return false, err .. ' [code '..code..']' end
+end
+  
+
 -- This ugly line will delete itself upon unpacking the module.
 if...=='unpack'then assert(loadstring(FS.readfile'file_slurp.lua':gsub('[^\n]*return FS[^\n]*','')))()end
 
@@ -254,7 +271,15 @@ checkeq(e:match't and T mutually exclusive' ~= nil, true, e)
 local _, e = pcall(function() FS.readfile('', 'tX') end)
 checkeq(e:match'invalid option X' ~= nil, true, e)
 
+-- testfile and cleanup
+assert(FS.testfile'tmp1')
+assert(FS.testfile'tmp1', 'r')
 os.remove'tmp1'
+local ok, err = FS.testfile'tmp1'; assert(not ok and err)
+assert(FS.testfile('tmp1', 'w'))
+assert(FS.testfile'tmp1')
+os.remove'tmp2'
+assert(not FS.testfile'tmp2')
 
 print 'OK'
 
@@ -262,6 +287,7 @@ print 'OK'
 
 --[[ FILE CHANGES.txt
 000.004.2011-11-19
+  Add `testfile` function.
   Change `_VERSION` to string.
   minor: Generalize unpack.lua; add CHANGES.txt
 
