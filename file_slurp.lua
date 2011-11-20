@@ -115,7 +115,7 @@ THE SOFTWARE.
 -- file_slurp.lua
 -- (c) 2011 David Manura.  Licensed under the same terms as Lua 5.1 (MIT license).
 
-local FS = {_TYPE = 'module', _NAME = 'file_slurp', _VERSION = 0.001001}
+local FS = {_TYPE = 'module', _NAME = 'file_slurp', _VERSION = '000.003.2011-11-19'}
 
 local function check_options(options)
   if not options then return {} end
@@ -182,11 +182,12 @@ package = 'file_slurp'
 version = '$(_VERSION)-1'
 source = {
   -- IMPROVE?
-  --url = 'https://raw.github.com/gist/1325400/file_slurp.lua',
+  --url = 'https://raw.github.com/gist/1325400/file_slurp.lua', -- latest raw
+  --url = 'https://raw.github.com/gist/1325400/$(GITVERSION)/file_slurp.lua',
   --url = 'https://gist.github.com/gists/1325400/download',
   --file = 'file_slurp-$(_VERSION).tar.gz'
-  url = 'https://raw.github.com/gist/1325400/3a6c583847380feebba122d73f9c5121ae7ab16d/file_slurp.lua',
-  md5 = '76cf352abf4d8a924c6180d7c663c916'
+  url = '$(URL)'
+  md5 = '$(MD5)'
 }
 description = {
   summary = 'Easily read/write entire files from/to a string.',
@@ -265,15 +266,25 @@ print 'OK'
 
 --]]---------------------------------------------------------------------
 
+--[[ FILE CHANGES.txt
+000.004.2011-11-19
+  Change `_VERSION` to string.
+  minor: Generalize unpack.lua; add CHANGES.txt
+
+0.001001 2011-11-05
+  Initial public release
+--]]
+
 --[[ FILE unpack.lua  -- return FS
 
 -- This optional code unpacks files into an "out" subdirectory for deployment.
 local M = FS
-local code = FS.readfile('file_slurp.lua', 'T')
+local name = arg[0]:match('[^/\\]+')
+local code = FS.readfile(name, 'T')
 code = code:gsub('%-*\n*%-%-%[%[%s*FILE%s+(%S+).-\n\n?(.-)%-%-%]%]%-*%s*',
  function(filename, text)
-  filename = filename:gsub('%$%(_VERSION%)', ("%1.6f"):format(M._VERSION))
-  text = text:gsub('%$%(_VERSION%)', ("%1.6f"):format(M._VERSION))
+  filename = filename:gsub('%$%(_VERSION%)', M._VERSION)
+  text = text:gsub('%$%(_VERSION%)', M._VERSION)
   if filename ~= 'unpack.lua' then
     if not FS.writefile('out/.test', '', 's') then os.execute'mkdir out' end
     os.remove'out/.test'
@@ -283,8 +294,8 @@ code = code:gsub('%-*\n*%-%-%[%[%s*FILE%s+(%S+).-\n\n?(.-)%-%-%]%]%-*%s*',
   return ''
 end)
 code = code:gsub('%-%- ?This ugly line[^\n]*\n[^\n]*\n', '')
-print('writing out/file_slurp.lua')
-FS.writefile('out/file_slurp.lua', code)
+print('writing out/' .. name)
+FS.writefile('out/' .. name, code)
 print('testing...')
 assert(loadfile('out/test.lua'))()
 
