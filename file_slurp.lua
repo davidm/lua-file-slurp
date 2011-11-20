@@ -34,8 +34,7 @@ API
           on reading.  This is a more portable form of 't'.
           't' and 'T' are mutually exclusive.
     's' - silence/supress raising errors (described below).
-    'a' - append to file rather than overwrite.  Should only be used when
-          writing.
+    'a' - append to file rather than overwrite.  Should only be used for write.
     'p' - open a pipe.  `filename` is a command to execute.  'a'/'t' ignored.
     
     Error Handling: Normally, this function will raise an error string on
@@ -120,28 +119,23 @@ local FS = {_TYPE = 'module', _NAME = 'file_slurp', _VERSION = '000.003.2011-11-
 local function check_options(options)
   if not options then return {} end
   local bad = options:match'[^tTsap]'
-  if bad then error('ASSERT: invalid option ' .. bad .. ' in ' .. options, 3) end
+  if bad then error('ASSERT: invalid option '..bad, 3) end
   local t = {}; for v in options:gmatch'.' do t[v] = true end
-  if t.T and t.t then error('ASSERT: options t and T mutually exclusive in '
-                            .. options, 3) end
+  if t.T and t.t then error('ASSERT: options t and T mutually exclusive', 3) end
   return t
 end
 
 local function fail(tops, err, code, filename)
-  err = err .. ' [code ' .. code .. ']'
-  err = err .. ' [filename ' .. filename .. ']' -- maybe make option
-  if tops.s then
-    return nil, err
-  else
-    error(err, 3)
-  end
+  err = err..' [code '..code..']'
+  err = err..' [filename '..filename..']' -- maybe make option
+  if tops.s then return nil, err else error(err, 3) end
 end
 
 function FS.readfile(filename, options)
   local tops = check_options(options)
   local open = tops.p and io.popen or io.open
   local data, ok
-  local fh, err, code = open(filename, 'r' .. ((tops.t or tops.p) and '' or 'b'))
+  local fh, err, code = open(filename, 'r'..((tops.t or tops.p) and '' or 'b'))
   if fh then
     data, err, code = fh:read'*a'
     if data then ok, err, code = fh:close() else fh:close() end
