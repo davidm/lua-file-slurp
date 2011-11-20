@@ -124,7 +124,7 @@ THE SOFTWARE.
 -- file_slurp.lua
 -- (c) 2011 David Manura.  Licensed under the same terms as Lua 5.1 (MIT license).
 
-local FS = {_TYPE = 'module', _NAME = 'file_slurp', _VERSION = '000.003.2011-11-19'}
+local FS = {_TYPE='module', _NAME='file_slurp', _VERSION='000.004.2011-11-19'}
 
 local function check_options(options)
   if not options then return {} end
