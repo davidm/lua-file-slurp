@@ -30,13 +30,13 @@ API
     options:
     't' - read/write in text mode (i.e. converting newlines from/to native OS
           formats) rather than the default binary mode.
-    'T' - reads/write in binary mode but remove carriage return '\r' characters
+    'T' - read/write in binary mode but remove carriage return '\r' characters
           on reading.  This is a more portable form of 't'.
           't' and 'T' are mutually exclusive.
     's' - silence/supress raising errors (described below).
     'a' - append to file rather than overwrite.  Should only be used when
           writing.
-    'p' - opens a pipe.  `filename` is a command to execute.  'a'/'t' ignored.
+    'p' - open a pipe.  `filename` is a command to execute.  'a'/'t' ignored.
     
     Error Handling: Normally, this function will raise an error string on
     failure.  The error string will include the error message, error code, and
