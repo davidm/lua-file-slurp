@@ -81,12 +81,16 @@ DESIGN NOTES
 
 INSTALLATION
 
+  Download file_slurp.lua:
+  
+    wget https://raw.github.com/gist/1325400/file_slurp.lua
+
   Copy file_slurp.lua into your LUA_PATH.
   
-  You may optionally unpack it and install into LuaRocks:
+  Alternately, unpack it and install into LuaRocks:
   
      wget https://raw.github.com/gist/1422205/sourceunpack.lua
-     ./sourceunpack file_slurp.lua
+     lua sourceunpack file_slurp.lua
      (cd out && luarocks make)
 
 Related work
