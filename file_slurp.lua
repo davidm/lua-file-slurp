@@ -81,11 +81,14 @@ DESIGN NOTES
 
 INSTALLATION
 
-  Copy file_slurp.lua into your LUA_PATH.  You may optionally run
-  "lua file_slurp.lua unpack" to unpack the module into individual files in
-  an "out" subdirectory.   To subsequently install into LuaRocks, run
-  "cd out && luarocks make file_slurp*.rockspec"
+  Copy file_slurp.lua into your LUA_PATH.
   
+  You may optionally unpack it and install into LuaRocks:
+  
+     wget https://raw.github.com/gist/1422205/sourceunpack.lua
+     ./sourceunpack file_slurp.lua
+     (cd out && luarocks make)
+
 Related work
 
   Similar slurp functions have been implemented in Lua and other languages:
@@ -124,7 +127,7 @@ THE SOFTWARE.
 -- file_slurp.lua
 -- (c) 2011 David Manura.  Licensed under the same terms as Lua 5.1 (MIT license).
 
-local FS = {_TYPE='module', _NAME='file_slurp', _VERSION='0.4.20111129'}
+local FS = {_TYPE='module', _NAME='file_slurp', _VERSION='0.4.20111201'}
 
 local function check_options(options)
   if not options then return {} end
@@ -175,10 +178,6 @@ function FS.testfile(filename, options)
   else return false, err .. ' [code '..code..']' end
 end
   
-
--- This ugly line will delete itself upon unpacking the module.
-if...=='unpack'then assert(loadstring(FS.readfile'file_slurp.lua':gsub('[^\n]*return FS[^\n]*','')))()end
-
 return FS
 
 -- Implementation footnotes: The (optional) stack `level` parameter on
@@ -291,34 +290,3 @@ print 'OK'
 0.1.20111105
   Initial public release
 --]]
-
---[[ FILE unpack.lua  -- return FS
-
--- This optional code unpacks files into an "out" subdirectory for deployment.
-local M = FS
-local name = arg[0]:match('[^/\\]+')
-local V = {_VERSION=M._VERSION}
-V.GITID = (M.readfile('git rev-parse HEAD:'..name, 'ps') or ''):match('^([0-9a-f]+)%s*$')
-V.MD5 = (M.readfile('md5sum '..name, 'ps') or ''):match('^([0-9a-f]+)')
-io.write('GITID=', V.GITID, '\n')
-io.write('MD5=', V.MD5, '\n')
-local code = FS.readfile(name, 'T')
-code = code:gsub('%-*\n*%-%-%[%[%s*FILE%s+(%S+).-\n\n?(.-)%-%-%]%]%-*%s*',
- function(filename, text)
-  filename = filename:gsub('%$%((.-)%)', V)
-  text = text:gsub('%$%((.-)%)', V)
-  if filename ~= 'unpack.lua' then
-    if not FS.writefile('out/.test', '', 's') then os.execute'mkdir out' end
-    os.remove'out/.test'
-    print('writing out/' .. filename)
-    FS.writefile('out/' .. filename, text)
-  end
-  return ''
-end)
-code = code:gsub('%-%- ?This ugly line[^\n]*\n[^\n]*\n', '')
-print('writing out/' .. name)
-FS.writefile('out/' .. name, code)
-print('testing...')
-assert(loadfile('out/test.lua'))()
-
---]]---------------------------------------------------------------------
