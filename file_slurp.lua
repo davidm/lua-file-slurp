@@ -124,7 +124,7 @@ THE SOFTWARE.
 -- file_slurp.lua
 -- (c) 2011 David Manura.  Licensed under the same terms as Lua 5.1 (MIT license).
 
-local FS = {_TYPE='module', _NAME='file_slurp', _VERSION='000.004.2011-11-19'}
+local FS = {_TYPE='module', _NAME='file_slurp', _VERSION='0.4.20111129'}
 
 local function check_options(options)
   if not options then return {} end
@@ -192,12 +192,9 @@ return FS
 package = 'file_slurp'
 version = '$(_VERSION)-1'
 source = {
-  -- IMPROVE?
+  url = 'https://raw.github.com/gist/1325400/$(GITID)/file_slurp.lua',
   --url = 'https://raw.github.com/gist/1325400/file_slurp.lua', -- latest raw
-  --url = 'https://raw.github.com/gist/1325400/$(GITVERSION)/file_slurp.lua',
   --url = 'https://gist.github.com/gists/1325400/download',
-  --file = 'file_slurp-$(_VERSION).tar.gz'
-  url = '$(URL)'
   md5 = '$(MD5)'
 }
 description = {
@@ -286,12 +283,12 @@ print 'OK'
 --]]---------------------------------------------------------------------
 
 --[[ FILE CHANGES.txt
-000.004.2011-11-19
+0.4.20111129
   Add `testfile` function.
   Change `_VERSION` to string.
   minor: Generalize unpack.lua; add CHANGES.txt
 
-0.001001 2011-11-05
+0.1.20111105
   Initial public release
 --]]
 
@@ -300,11 +297,16 @@ print 'OK'
 -- This optional code unpacks files into an "out" subdirectory for deployment.
 local M = FS
 local name = arg[0]:match('[^/\\]+')
+local V = {_VERSION=M._VERSION}
+V.GITID = (M.readfile('git rev-parse HEAD:'..name, 'ps') or ''):match('^([0-9a-f]+)%s*$')
+V.MD5 = (M.readfile('md5sum '..name, 'ps') or ''):match('^([0-9a-f]+)')
+io.write('GITID=', V.GITID, '\n')
+io.write('MD5=', V.MD5, '\n')
 local code = FS.readfile(name, 'T')
 code = code:gsub('%-*\n*%-%-%[%[%s*FILE%s+(%S+).-\n\n?(.-)%-%-%]%]%-*%s*',
  function(filename, text)
-  filename = filename:gsub('%$%(_VERSION%)', M._VERSION)
-  text = text:gsub('%$%(_VERSION%)', M._VERSION)
+  filename = filename:gsub('%$%((.-)%)', V)
+  text = text:gsub('%$%((.-)%)', V)
   if filename ~= 'unpack.lua' then
     if not FS.writefile('out/.test', '', 's') then os.execute'mkdir out' end
     os.remove'out/.test'
