@@ -90,7 +90,7 @@ INSTALLATION
   Alternately, unpack it and install into LuaRocks:
   
      wget https://raw.github.com/gist/1422205/sourceunpack.lua
-     lua sourceunpack file_slurp.lua
+     lua sourceunpack.lua file_slurp.lua
      (cd out && luarocks make)
 
 Related work
@@ -106,7 +106,7 @@ Related work
 
 Copyright
 
-(c) 2011 David Manura.  Licensed under the same terms as Lua 5.1 (MIT license).
+(c) 2011-2012 David Manura.  Licensed under the same terms as Lua 5.1 (MIT license).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -129,9 +129,9 @@ THE SOFTWARE.
 --]]---------------------------------------------------------------------
 
 -- file_slurp.lua
--- (c) 2011 David Manura.  Licensed under the same terms as Lua 5.1 (MIT license).
+-- (c) 2011-2012 David Manura.  Licensed under the same terms as Lua 5.1 (MIT license).
 
-local FS = {_TYPE='module', _NAME='file_slurp', _VERSION='0.4.20111201'}
+local FS = {_TYPE='module', _NAME='file_slurp', _VERSION='0.4.1.20120121'}
 
 local function check_options(options)
   if not options then return {} end
@@ -190,7 +190,7 @@ return FS
 
 ---------------------------------------------------------------------
 
---[[ FILE file_slurp-$(_VERSION)-1.rockspec
+--[[ FILE rockspec.in
 
 package = 'file_slurp'
 version = '$(_VERSION)-1'
@@ -286,6 +286,9 @@ print 'OK'
 --]]---------------------------------------------------------------------
 
 --[[ FILE CHANGES.txt
+0.4.1.20120121
+  Updated packaging (sourceunpack).
+
 0.4.20111129
   Add `testfile` function.
   Change `_VERSION` to string.
