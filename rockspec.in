@@ -1,0 +1,23 @@
+package = 'file-slurp'
+version = '$(_VERSION)-1'
+source = {
+  url = 'git://github.com/davidm/lua-file-slurp.git',
+}
+description = {
+  summary = 'Easily read/write entire files from/to a string.',
+  detailed =
+    'Provides simple functions to read/write entire files from/to a string.',
+  license = 'MIT/X11',
+  homepage = 'https://github.com/davidm/lua-file-slurp',
+  maintainer = 'David Manura'
+}
+dependencies = {}
+build = {
+  type = 'builtin',
+  modules = {
+    ['file_slurp'] = 'lua/file_slurp.lua'
+  }
+}
+-- VERSIONFROM="lua/file_slurp.lua"
+-- ROCKVERSION="1"
+-- ROCKSCMVERSION="1"

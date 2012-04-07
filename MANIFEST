@@ -1,0 +1,9 @@
+lua/file_slurp.lua
+CHANGES.txt
+MANIFEST
+README.txt
+test.lua
+rockspec.in
+MANIFEST
+util.mk
+Makefile

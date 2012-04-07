@@ -1,0 +1,14 @@
+0.4.2.20120406
+  Repackage on github.  Files reorganized.
+  Rename module to file-slurp (from file_slurp).
+
+0.4.1.20120121
+  Updated packaging (sourceunpack).
+
+0.4.20111129
+  Add `testfile` function.
+  Change `_VERSION` to string.
+  minor: Generalize unpack.lua; add CHANGES.txt
+
+0.1.20111105
+  Initial public release
